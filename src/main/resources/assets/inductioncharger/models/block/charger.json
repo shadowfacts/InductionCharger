@@ -1,0 +1,104 @@
+{
+	"textures": {
+		"base": "inductioncharger:blocks/charger/base",
+		"energy": "inductioncharger:blocks/charger/energy",
+		"particle": "inductioncharger:blocks/charger/base"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 0],
+			"to": [16, 2, 16],
+			"faces": {
+				"down": {
+					"texture": "#base",
+					"cullface": "down"
+				},
+				"up": {
+					"texture": "#base"
+				},
+				"north": {
+					"texture": "#base",
+					"cullface": "north"
+				},
+				"south": {
+					"texture": "#base",
+					"cullface": "south"
+				},
+				"east": {
+					"texture": "#base",
+					"cullface": "east"
+				},
+				"west": {
+					"texture": "#base",
+					"cullface": "west"
+				}
+			}
+		},
+		{
+			"from": [1, 2, 1],
+			"to": [15, 3, 15],
+			"faces": {
+				"up": {
+					"texture": "#base"
+				},
+				"north": {
+					"texture": "#base"
+				},
+				"south": {
+					"texture": "#base"
+				},
+				"west": {
+					"texture": "#base"
+				},
+				"east": {
+					"texture": "#base"
+				}
+			}
+		},
+		{
+			"from": [5, 2, 0],
+			"to": [11, 4, 1],
+			"faces": {
+				"north": {
+					"texture": "#base",
+					"cullface": "north"
+				},
+				"south": {
+					"texture": "#base"
+				},
+				"west": {
+					"texture": "#base"
+				},
+				"east": {
+					"texture": "#base"
+				}
+			}
+		},
+		{
+			"from": [4, 4, 0],
+			"to": [12, 12, 1],
+			"faces": {
+				"up": {
+					"texture": "#base"
+				},
+				"down": {
+					"texture": "#base"
+				},
+				"north": {
+					"uv": [0, 0, 8, 8],
+					"texture": "#energy",
+					"cullface": "north"
+				},
+				"south": {
+					"texture": "#base"
+				},
+				"west": {
+					"texture": "#base"
+				},
+				"east": {
+					"texture": "#base"
+				}
+			}
+		}
+	]
+}

@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 /**
@@ -37,6 +38,7 @@ public class InductionCharger {
 		GameRegistry.addRecipe(new ShapedOreRecipe(charger, "rIr", "iIi", 'r', "dustRedstone", 'i', "nuggetIron", 'I', "ingotIron"));
 	}
 
+	@SideOnly(Side.CLIENT)
 	private void preInitClient() {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCharger.class, new TESRCharger());
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(charger), 0, new ModelResourceLocation(modId + ":charger", "inventory"));

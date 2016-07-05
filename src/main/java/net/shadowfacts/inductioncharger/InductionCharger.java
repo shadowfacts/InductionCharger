@@ -15,7 +15,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 /**
  * @author shadowfacts
  */
-@Mod(modid = InductionCharger.modId, name = InductionCharger.name, version = InductionCharger.version, dependencies = "required-after:shadowmc@[3.3.8,);required-after:Tesla;", acceptedMinecraftVersions = "[1.9.4]")
+@Mod(modid = InductionCharger.modId, name = InductionCharger.name, version = InductionCharger.version, dependencies = "required-after:shadowmc@[3.4.0,);required-after:Tesla;", acceptedMinecraftVersions = "[1.10.2]")
 public class InductionCharger {
 
 	public static final String modId = "InductionCharger";

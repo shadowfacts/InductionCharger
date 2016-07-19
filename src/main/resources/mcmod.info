@@ -1,0 +1,16 @@
+[
+	{
+	  "modid": "InductionCharger",
+	  "name": "Induction Charger",
+	  "description": "A Tesla/RF item charger.",
+	  "version": "${version}",
+	  "mcversion": "${mcversion}",
+	  "url": "http://github.com/shadowfacts/InductionCharger",
+	  "updateUrl": "",
+	  "authorList": ["Shadowfacts"],
+	  "credits": "",
+	  "logoFile": "",
+	  "screenshots": [],
+	  "dependencies": []
+	}
+]

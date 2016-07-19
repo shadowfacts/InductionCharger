@@ -4,6 +4,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -29,6 +30,10 @@ public class BlockCharger extends BlockTE<TileEntityCharger> {
 
 	public BlockCharger() {
 		super(Material.ROCK, "charger");
+
+		setHardness(0.7f);
+
+		setCreativeTab(CreativeTabs.MISC);
 
 		setDefaultState(getDefaultState()
 				.withProperty(FACING, EnumFacing.NORTH));

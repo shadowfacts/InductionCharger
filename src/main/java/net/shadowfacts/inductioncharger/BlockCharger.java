@@ -35,20 +35,24 @@ public class BlockCharger extends BlockTE<TileEntityCharger> {
 	}
 
 	@Override
+	@Deprecated
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
 	}
 
 	@Override
+	@Deprecated
 	public boolean isFullCube(IBlockState state) {
 		return false;
 	}
 
+	@Nonnull
 	@Override
 	protected BlockStateContainer createBlockState() {
 		return new BlockStateContainer(this, FACING);
 	}
 
+	@Nonnull
 	@Override
 	public IBlockState onBlockPlaced(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
 		return getDefaultState().withProperty(FACING, getDirection(pos, placer).getOpposite());
@@ -63,12 +67,22 @@ public class BlockCharger extends BlockTE<TileEntityCharger> {
 
 	@Override
 	public int getMetaFromState(IBlockState state) {
-		return state.getValue(FACING).getIndex();
+		int meta = 0;
+		meta |= state.getValue(FACING).getHorizontalIndex();
+		meta |= 0b1000; // set the 4th bit indicating the new metadata format
+		return meta;
 	}
 
+	@Nonnull
 	@Override
+	@Deprecated
 	public IBlockState getStateFromMeta(int meta) {
-		return getDefaultState().withProperty(FACING, EnumFacing.getFront(meta));
+		if ((meta >> 3) == 1) {
+			meta = meta & ~(1 << 3); // unset the 4th bit
+		} else {
+			meta -= 2; // old index instead of horizontal index
+		}
+		return getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta));
 	}
 
 	@Override

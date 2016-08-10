@@ -63,7 +63,7 @@ repositories {
 dependencies {
 	deobfCompile group: "net.shadowfacts", name: "ShadowMC", version: mc_version + "-" + shadowmc_version
 	deobfCompile group: "mezz.jei", name: "jei_" + mc_version, version: jei_version
-	deobfCompile group: "net.darkhax.tesla", name: "Tesla", version: tesla_version
+	deobfCompile group: "net.darkhax.tesla", name: "Tesla", version: mc_version + "-" + tesla_version
 }
 
 curseforge {

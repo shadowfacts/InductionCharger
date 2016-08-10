@@ -121,6 +121,7 @@ public class BlockCharger extends BlockTE<TileEntityCharger> {
 	}
 
 	@Override
+	@Deprecated
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
 		return BOX;
 	}

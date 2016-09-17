@@ -1,6 +1,5 @@
 package net.shadowfacts.inductioncharger;
 
-import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyContainerItem;
 import cofh.api.energy.IEnergyReceiver;
 import net.darkhax.tesla.api.implementation.BaseTeslaContainer;
@@ -12,9 +11,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import net.shadowfacts.inductioncharger.adapter.FUTeslaAdapter;
+import net.shadowfacts.inductioncharger.adapter.RFTeslaAdapter;
 import net.shadowfacts.shadowmc.ShadowMC;
 import net.shadowfacts.shadowmc.capability.CapHolder;
 import net.shadowfacts.shadowmc.network.PacketRequestTEUpdate;
@@ -32,9 +33,14 @@ public class TileEntityCharger extends BaseTileEntity implements ITickable, IIte
 			return 1;
 		}
 	};
+
 	@CapHolder(capabilities = {ITeslaHolder.class, ITeslaConsumer.class}, sides = EnumFacing.DOWN)
 	private BaseTeslaContainer tesla = new BaseTeslaContainer(16000, 100, 100);
-	private EnergyStorage rf = new EnergyStorage(16000, 100);
+
+	@CapHolder(capabilities = net.minecraftforge.energy.IEnergyStorage.class, sides = EnumFacing.DOWN)
+	private FUTeslaAdapter fu = new FUTeslaAdapter(tesla);
+
+	private RFTeslaAdapter rf = new RFTeslaAdapter(tesla);
 
 	private boolean firstTick = true;
 	int ticks = 0;
@@ -59,7 +65,11 @@ public class TileEntityCharger extends BaseTileEntity implements ITickable, IIte
 					result = true;
 				} else if (stack.getItem() instanceof IEnergyContainerItem && rf.getEnergyStored() > 0) {
 					IEnergyContainerItem container = (IEnergyContainerItem) stack.getItem();
-					rf.extractEnergy(container.receiveEnergy(stack, rf.extractEnergy(rf.getEnergyStored(), true), false), true);
+					rf.extractEnergy(container.receiveEnergy(stack, rf.extractEnergy(rf.getEnergyStored(), true), false), false);
+					result = true;
+				} else if (stack.hasCapability(CapabilityEnergy.ENERGY, null) && fu.getEnergyStored() > 0) {
+					net.minecraftforge.energy.IEnergyStorage storage = stack.getCapability(CapabilityEnergy.ENERGY, null);
+					fu.extractEnergy(storage.receiveEnergy(rf.extractEnergy(rf.getEnergyStored(), true), false), false);
 					result = true;
 				}
 				if (result) {
@@ -74,17 +84,6 @@ public class TileEntityCharger extends BaseTileEntity implements ITickable, IIte
 		sync();
 	}
 
-	private boolean isEnergyFull(ItemStack stack) {
-		if (stack.hasCapability(TeslaCapabilities.CAPABILITY_HOLDER, null)) {
-			ITeslaHolder holder = stack.getCapability(TeslaCapabilities.CAPABILITY_HOLDER, null);
-			return holder.getStoredPower() == holder.getCapacity();
-		} else if (stack.getItem() instanceof IEnergyContainerItem) {
-			IEnergyContainerItem container = (IEnergyContainerItem)stack.getItem();
-			return container.getEnergyStored(stack) == container.getMaxEnergyStored(stack);
-		}
-		return true;
-	}
-
 	private EnumFacing getFacing() {
 		return worldObj.getBlockState(pos).getValue(BlockCharger.FACING);
 	}
@@ -94,7 +93,6 @@ public class TileEntityCharger extends BaseTileEntity implements ITickable, IIte
 		super.writeToNBT(tag);
 		tag.setTag("Inventory", inventory.serializeNBT());
 		tag.setTag("Tesla", tesla.serializeNBT());
-		tag.setTag("RF", rf.writeToNBT(new NBTTagCompound()));
 		return tag;
 	}
 
@@ -103,7 +101,6 @@ public class TileEntityCharger extends BaseTileEntity implements ITickable, IIte
 		super.readFromNBT(tag);
 		inventory.deserializeNBT(tag.getCompoundTag("Inventory"));
 		tesla.deserializeNBT(tag.getCompoundTag("Tesla"));
-		rf.readFromNBT(tag.getCompoundTag("RF"));
 	}
 
 	@Override
@@ -147,7 +144,7 @@ public class TileEntityCharger extends BaseTileEntity implements ITickable, IIte
 
 	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-		if (stack.hasCapability(TeslaCapabilities.CAPABILITY_CONSUMER, null) || stack.getItem() instanceof IEnergyContainerItem) {
+		if (stack.hasCapability(TeslaCapabilities.CAPABILITY_CONSUMER, null) || stack.getItem() instanceof IEnergyContainerItem || stack.hasCapability(CapabilityEnergy.ENERGY, null)) {
 			return inventory.insertItem(slot, stack, simulate);
 		}
 		return stack;
@@ -164,20 +161,26 @@ public class TileEntityCharger extends BaseTileEntity implements ITickable, IIte
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-		if ((capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER) && facing == getFacing()) {
-			return true;
-		} else {
-			return super.hasCapability(capability, facing);
+		if (facing == getFacing()) {
+			if (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER) {
+				return true;
+			} else if (capability == CapabilityEnergy.ENERGY) {
+				return true;
+			}
 		}
+		return super.hasCapability(capability, facing);
 	}
 
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-		if ((capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER) && facing == getFacing()) {
-			return (T)tesla;
-		} else {
-			return super.getCapability(capability, facing);
+		if (facing == getFacing()) {
+			if (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER) {
+				return (T)tesla;
+			} else if (capability == CapabilityEnergy.ENERGY) {
+				return (T)fu;
+			}
 		}
+		return super.getCapability(capability, facing);
 	}
 
 }

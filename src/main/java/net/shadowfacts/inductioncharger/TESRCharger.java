@@ -18,7 +18,7 @@ public class TESRCharger extends TileEntitySpecialRenderer<TileEntityCharger> {
 	@Override
 	public void renderTileEntityAt(TileEntityCharger te, double x, double y, double z, float partialTicks, int destroyStage) {
 		ItemStack stack = te.getStackInSlot(0);
-		if (stack != null) {
+		if (!stack.isEmpty()) {
 			bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 			GlStateManager.enableRescaleNormal();
 			GlStateManager.alphaFunc(516, 0.1f);

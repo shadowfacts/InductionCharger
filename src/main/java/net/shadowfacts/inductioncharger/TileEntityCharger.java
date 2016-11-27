@@ -47,16 +47,16 @@ public class TileEntityCharger extends BaseTileEntity implements ITickable, IIte
 
 	@Override
 	public void update() {
-		if (worldObj.isRemote) { // client
+		if (world.isRemote) { // client
 			if (firstTick) {
 				firstTick = false;
 				ShadowMC.network.sendToServer(new PacketRequestTEUpdate(this));
 			}
-			if (inventory.getStackInSlot(0) != null) {
+			if (!inventory.getStackInSlot(0).isEmpty()) {
 				ticks++;
 			}
 		} else { // server
-			if (inventory.getStackInSlot(0) != null) {
+			if (!inventory.getStackInSlot(0).isEmpty()) {
 				ItemStack stack = inventory.getStackInSlot(0);
 				boolean result = false;
 				if (stack.hasCapability(TeslaCapabilities.CAPABILITY_CONSUMER, null) && tesla.getStoredPower() > 0) {
@@ -85,7 +85,7 @@ public class TileEntityCharger extends BaseTileEntity implements ITickable, IIte
 	}
 
 	private EnumFacing getFacing() {
-		return worldObj.getBlockState(pos).getValue(BlockCharger.FACING);
+		return world.getBlockState(pos).getValue(BlockCharger.FACING);
 	}
 
 	@Override
@@ -154,7 +154,7 @@ public class TileEntityCharger extends BaseTileEntity implements ITickable, IIte
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
 		ItemStack stack = inventory.extractItem(slot, amount, simulate);
 
-		if (getStackInSlot(0) == null) ticks = 0;
+		if (getStackInSlot(0).isEmpty()) ticks = 0;
 
 		return stack;
 	}

@@ -59,7 +59,7 @@ public class BlockCharger extends BlockTE<TileEntityCharger> {
 
 	@Nonnull
 	@Override
-	public IBlockState onBlockPlaced(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
 		return getDefaultState().withProperty(FACING, getDirection(pos, placer).getOpposite());
 	}
 
@@ -91,11 +91,12 @@ public class BlockCharger extends BlockTE<TileEntityCharger> {
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (!world.isRemote) {
 			TileEntityCharger te = getTileEntity(world, pos);
-			if (te.getStackInSlot(0) == null) { // insert
-				if (heldItem != null && te.insertItem(0, heldItem, true) != heldItem) {
+			ItemStack heldItem = player.getHeldItem(hand);
+			if (te.getStackInSlot(0).isEmpty()) { // insert
+				if (!heldItem.isEmpty() && te.insertItem(0, heldItem, true) != heldItem) {
 					player.setHeldItem(hand, te.insertItem(0, heldItem, false));
 					te.save();
 					return true;

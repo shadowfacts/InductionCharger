@@ -24,10 +24,10 @@ import net.shadowfacts.shadowmc.tileentity.BaseTileEntity;
 /**
  * @author shadowfacts
  */
-public class TileEntityCharger extends BaseTileEntity implements ITickable, IItemHandler, IEnergyReceiver {
+public class TileEntityCharger extends BaseTileEntity implements ITickable, IEnergyReceiver {
 
 	@CapHolder(capabilities = IItemHandler.class, sides = EnumFacing.DOWN)
-	private ItemStackHandler inventory = new ItemStackHandler(1) {
+	ItemStackHandler inventory = new ItemStackHandler(1) {
 		@Override
 		protected int getStackLimit(int slot, ItemStack stack) {
 			return 1;
@@ -130,33 +130,6 @@ public class TileEntityCharger extends BaseTileEntity implements ITickable, IIte
 			return rf.receiveEnergy(maxReceive, simulate);
 		}
 		return 0;
-	}
-
-	@Override
-	public int getSlots() {
-		return inventory.getSlots();
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int slot) {
-		return inventory.getStackInSlot(slot);
-	}
-
-	@Override
-	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-		if (stack.hasCapability(TeslaCapabilities.CAPABILITY_CONSUMER, null) || stack.getItem() instanceof IEnergyContainerItem || stack.hasCapability(CapabilityEnergy.ENERGY, null)) {
-			return inventory.insertItem(slot, stack, simulate);
-		}
-		return stack;
-	}
-
-	@Override
-	public ItemStack extractItem(int slot, int amount, boolean simulate) {
-		ItemStack stack = inventory.extractItem(slot, amount, simulate);
-
-		if (getStackInSlot(0).isEmpty()) ticks = 0;
-
-		return stack;
 	}
 
 	@Override

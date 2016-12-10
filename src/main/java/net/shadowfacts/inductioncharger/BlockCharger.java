@@ -95,15 +95,15 @@ public class BlockCharger extends BlockTE<TileEntityCharger> {
 		if (!world.isRemote) {
 			TileEntityCharger te = getTileEntity(world, pos);
 			ItemStack heldItem = player.getHeldItem(hand);
-			if (te.getStackInSlot(0).isEmpty()) { // insert
-				if (!heldItem.isEmpty() && te.insertItem(0, heldItem, true) != heldItem) {
-					player.setHeldItem(hand, te.insertItem(0, heldItem, false));
+			if (te.inventory.getStackInSlot(0).isEmpty()) { // insert
+				if (!heldItem.isEmpty() && te.inventory.insertItem(0, heldItem, true) != heldItem) {
+					player.setHeldItem(hand, te.inventory.insertItem(0, heldItem, false));
 					te.save();
 					return true;
 				}
 			} else { // extract
 				if (player.isSneaking()) {
-					ItemStack stack = te.extractItem(0, 1, false);
+					ItemStack stack = te.inventory.extractItem(0, 1, false);
 					boolean result = player.inventory.addItemStackToInventory(stack);
 					if (!result) {
 						player.dropItem(stack, false);

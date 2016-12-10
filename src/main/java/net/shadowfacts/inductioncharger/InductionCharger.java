@@ -30,7 +30,7 @@ public class InductionCharger {
 		charger = new BlockCharger();
 		GameRegistry.register(charger);
 		GameRegistry.register(new ItemBlock(charger).setRegistryName(charger.getRegistryName()));
-		GameRegistry.registerTileEntityWithAlternatives(TileEntityCharger.class, "InductionCharger.charger", "charger");
+		GameRegistry.registerTileEntityWithAlternatives(TileEntityCharger.class, "InductionCharger.charger");
 		if (event.getSide() == Side.CLIENT) {
 			preInitClient();
 		}

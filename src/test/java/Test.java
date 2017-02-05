@@ -55,7 +55,7 @@ public class Test {
 		}
 
 		@Override
-		public void getSubItems(@Nonnull Item item, @Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> subItems) {
+		public void getSubItems(@Nonnull Item item, @Nullable CreativeTabs tab, @Nonnull NonNullList<ItemStack> subItems) {
 			subItems.add(new ItemStack(this));
 			ItemStack stack2 = new ItemStack(this);
 			stack2.getCapability(TeslaCapabilities.CAPABILITY_CONSUMER, null).givePower(1000, false);
@@ -116,7 +116,7 @@ public class Test {
 		}
 
 		@Override
-		public void getSubItems(@Nonnull Item item, @Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> subItems) {
+		public void getSubItems(@Nonnull Item item, @Nullable CreativeTabs tab, @Nonnull NonNullList<ItemStack> subItems) {
 			subItems.add(new ItemStack(this));
 			ItemStack stack2 = new ItemStack(this);
 			stack2.getCapability(CapabilityEnergy.ENERGY, null).receiveEnergy(1000, false);

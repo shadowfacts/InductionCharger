@@ -117,6 +117,7 @@ public class BlockCharger extends BlockTE<TileEntityCharger> {
 	}
 
 	@Override
+	@Deprecated
 	public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 		return side == EnumFacing.DOWN;
 	}

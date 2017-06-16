@@ -7,7 +7,7 @@ buildscript {
 		}
 	}
 	dependencies {
-		classpath "net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT"
+		classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
 	}
 }
 
@@ -63,7 +63,7 @@ repositories {
 dependencies {
 	deobfCompile group: "net.shadowfacts", name: "ShadowMC", version: mc_version + "-" + shadowmc_version
 	deobfCompile group: "mezz.jei", name: "jei_" + mc_version, version: jei_version
-	deobfCompile group: "net.darkhax.tesla", name: "Tesla", version: "1.11-" + tesla_version
+	deobfCompile group: "net.darkhax.tesla", name: "Tesla-1.12", version: tesla_version
 }
 
 curseforge {
@@ -72,7 +72,7 @@ curseforge {
 	project {
 		id = "246319"
 
-		addGameVersion "1.11.2"
+		addGameVersion "1.12"
 		addGameVersion "Java 8"
 
 		mainArtifact(jar) {

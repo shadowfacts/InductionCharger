@@ -1,0 +1,24 @@
+{
+	"type": "forge:ore_dict",
+	"pattern": [
+		"rIr",
+		"iIi"
+	],
+	"key": {
+		"r": {
+			"type": "forge:ore_dict",
+			"ore": "dustRedstone"
+		},
+		"I": {
+			"type": "forge:ore_dict",
+			"ore": "ingotIron"
+		},
+		"i": {
+			"type": "forge:ore_dict",
+			"ore": "nuggetIron"
+		}
+	},
+	"result": {
+		"item": "inductioncharger:charger"
+	}
+}

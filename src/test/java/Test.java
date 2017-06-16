@@ -2,6 +2,7 @@ import net.darkhax.tesla.api.implementation.BaseTeslaContainer;
 import net.darkhax.tesla.api.ITeslaHolder;
 import net.darkhax.tesla.capability.TeslaCapabilities;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -9,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
+import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -46,19 +48,22 @@ public class Test {
 		public ItemTest() {
 			super("test");
 			setHasSubtypes(true);
+			setCreativeTab(CreativeTabs.MISC);
 		}
 
 		@Override
-		public void addInformation(@Nonnull ItemStack stack, @Nonnull EntityPlayer playerIn, @Nonnull List<String> tooltip, boolean advanced) {
+		public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) {
 			ITeslaHolder tesla = stack.getCapability(TeslaCapabilities.CAPABILITY_HOLDER, null);
 			tooltip.add(String.format("%d / %d Tesla", tesla.getStoredPower(), tesla.getCapacity()));
 		}
 
 		@Override
-		public void getSubItems(@Nonnull Item item, @Nullable CreativeTabs tab, @Nonnull NonNullList<ItemStack> subItems) {
-			subItems.add(new ItemStack(this));
-			ItemStack stack2 = new ItemStack(this);
-			stack2.getCapability(TeslaCapabilities.CAPABILITY_CONSUMER, null).givePower(1000, false);
+		public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+			if (tab == CreativeTabs.MISC) {
+				items.add(new ItemStack(this));
+				ItemStack stack2 = new ItemStack(this);
+				stack2.getCapability(TeslaCapabilities.CAPABILITY_CONSUMER, null).givePower(1000, false);
+			}
 		}
 
 		@Override
@@ -107,19 +112,22 @@ public class Test {
 		public ItemFUTest() {
 			super("fuTest");
 			setHasSubtypes(true);
+			setCreativeTab(CreativeTabs.MISC);
 		}
 
 		@Override
-		public void addInformation(@Nonnull  ItemStack stack, @Nonnull EntityPlayer player, @Nonnull List<String> tooltip, boolean advanced) {
+		public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) {
 			IEnergyStorage fu = stack.getCapability(CapabilityEnergy.ENERGY, null);
 			tooltip.add(String.format("%d / %d FU", fu.getEnergyStored(), fu.getMaxEnergyStored()));
 		}
 
 		@Override
-		public void getSubItems(@Nonnull Item item, @Nullable CreativeTabs tab, @Nonnull NonNullList<ItemStack> subItems) {
-			subItems.add(new ItemStack(this));
-			ItemStack stack2 = new ItemStack(this);
-			stack2.getCapability(CapabilityEnergy.ENERGY, null).receiveEnergy(1000, false);
+		public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+			if (tab == CreativeTabs.MISC) {
+				items.add(new ItemStack(this));
+				ItemStack stack2 = new ItemStack(this);
+				stack2.getCapability(CapabilityEnergy.ENERGY, null).receiveEnergy(1000, false);
+			}
 		}
 
 		@Nonnull

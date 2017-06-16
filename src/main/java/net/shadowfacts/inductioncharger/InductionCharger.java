@@ -31,11 +31,10 @@ public class InductionCharger {
 		GameRegistry.register(charger);
 		GameRegistry.register(new ItemBlock(charger).setRegistryName(charger.getRegistryName()));
 		GameRegistry.registerTileEntityWithAlternatives(TileEntityCharger.class, "InductionCharger.charger");
+
 		if (event.getSide() == Side.CLIENT) {
 			preInitClient();
 		}
-
-		GameRegistry.addRecipe(new ShapedOreRecipe(charger, "rIr", "iIi", 'r', "dustRedstone", 'i', "nuggetIron", 'I', "ingotIron"));
 	}
 
 	@SideOnly(Side.CLIENT)

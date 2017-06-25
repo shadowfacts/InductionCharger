@@ -1,12 +1,16 @@
 package net.shadowfacts.inductioncharger;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -22,25 +26,37 @@ public class InductionCharger {
 	public static final String name = "Induction Charger";
 	public static final String version = "@VERSION@";
 
+	@Mod.Instance(modId)
+	public static InductionCharger instance;
+
 //	Content
-	public BlockCharger charger;
+	public BlockCharger charger = new BlockCharger();
 
 	@Mod.EventHandler
-	public void preInit(FMLPreInitializationEvent event) {
-		charger = new BlockCharger();
-		GameRegistry.register(charger);
-		GameRegistry.register(new ItemBlock(charger).setRegistryName(charger.getRegistryName()));
-		GameRegistry.registerTileEntityWithAlternatives(TileEntityCharger.class, "InductionCharger.charger");
-
-		if (event.getSide() == Side.CLIENT) {
-			preInitClient();
-		}
+	@SideOnly(Side.CLIENT)
+	private void preInitClient(FMLPreInitializationEvent event) {
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCharger.class, new TESRCharger());
 	}
 
-	@SideOnly(Side.CLIENT)
-	private void preInitClient() {
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCharger.class, new TESRCharger());
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(charger), 0, new ModelResourceLocation(modId + ":charger", "inventory"));
+	@Mod.EventBusSubscriber
+	public static class EventHandler {
+
+		@SubscribeEvent
+		public static void registerBlocks(RegistryEvent.Register<Block> event) {
+			event.getRegistry().register(instance.charger);
+			GameRegistry.registerTileEntity(TileEntityCharger.class, "InductionCharger.charger");
+		}
+
+		@SubscribeEvent
+		public static void registerItems(RegistryEvent.Register<Item> event) {
+			event.getRegistry().register(new ItemBlock(instance.charger).setRegistryName(instance.charger.getRegistryName()));
+		}
+
+		@SubscribeEvent
+		public static void registerModels(ModelRegistryEvent event) {
+			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(instance.charger), 0, new ModelResourceLocation(modId + ":charger", "inventory"));
+		}
+
 	}
 
 }

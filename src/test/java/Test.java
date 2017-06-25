@@ -11,6 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -18,8 +19,10 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.shadowfacts.inductioncharger.adapter.FUTeslaAdapter;
 import net.shadowfacts.shadowmc.item.ItemBase;
@@ -34,13 +37,23 @@ import java.util.List;
 @Mod(modid = "test")
 public class Test {
 
-	@Mod.EventHandler
-	public void preInit(FMLPreInitializationEvent event) {
-		ItemTest item = GameRegistry.register(new ItemTest());
-		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation("test:test", "inventory"));
+	public static ItemTest item = new ItemTest();
+	public static ItemFUTest fuItem = new ItemFUTest();
 
-		ItemFUTest fuItem = GameRegistry.register(new ItemFUTest());
-		ModelLoader.setCustomModelResourceLocation(fuItem, 0, new ModelResourceLocation("test:test", "inventory"));
+	@Mod.EventBusSubscriber
+	public static class EventHandler {
+
+		@SubscribeEvent
+		public static void registerItems(RegistryEvent.Register<Item> event) {
+			event.getRegistry().registerAll(item, fuItem);
+		}
+
+		@SubscribeEvent
+		public static void registerModels(ModelRegistryEvent event) {
+			ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation("test:test", "inventory"));
+			ModelLoader.setCustomModelResourceLocation(fuItem, 0, new ModelResourceLocation("test:test", "inventory"));
+		}
+
 	}
 
 	public static class ItemTest extends ItemBase {

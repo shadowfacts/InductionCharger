@@ -1,6 +1,6 @@
 package net.shadowfacts.inductioncharger.adapter;
 
-import cofh.api.energy.IEnergyStorage;
+import cofh.redstoneflux.api.IEnergyStorage;
 import net.darkhax.tesla.api.implementation.BaseTeslaContainer;
 
 /**
